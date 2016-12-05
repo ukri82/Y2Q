@@ -33,6 +33,7 @@
                   android:layout_alignParentLeft="true"
                   android:layout_below="@+id/title"
                   android:padding="5dp"
+                  android:layout_marginRight="85dp"
                   android:text="Address"
                   android:inputType="textMultiLine"
                   android:textSize="10sp"

@@ -43,12 +43,14 @@ public class TaskLoadOrganiations extends AsyncTask<Void, Void, ArrayList<Organi
         this.myListener = aListener_in;
         volleySingleton = VolleySingleton.getInstance(null);
         requestQueue = volleySingleton.getRequestQueue();
+        //Endpoints.waitForIP();
     }
 
 
     @Override
     protected ArrayList<Organization> doInBackground(Void... params)
     {
+        Endpoints.waitForIP();
         JSONObject response = Requestor.request(requestQueue, Endpoints.getRequestUrlNextOrgChunk(myStart, myCount, mLocationId, mLat, mLong));
         return OrgResultParser.parse(response);
     }

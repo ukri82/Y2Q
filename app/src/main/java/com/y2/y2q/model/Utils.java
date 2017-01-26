@@ -3,6 +3,10 @@ package com.y2.y2q.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -46,6 +50,42 @@ public class Utils
                 return result;
             }
         }
+    }
+
+    public static Date parseDate(String dateString)
+    {
+        DateFormat df = new SimpleDateFormat("yyyy-mm-dd HH:MM:SS");
+        Date dateOut = null;
+        try
+        {
+            if(!dateString.isEmpty() && dateString.compareTo("N.A") != 0)
+                dateOut = df.parse(dateString);
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+        return dateOut;
+    }
+
+    public static int parseInt(JSONObject jsonObject, String keyName)
+    {
+        int returnNum = 0;
+        String tokenNum = "0";
+        try
+        {
+            tokenNum = Utils.get(jsonObject, keyName);
+
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        if (tokenNum.compareTo("N.A") != 0)
+        {
+            returnNum = Integer.parseInt(tokenNum);
+        }
+
+        return returnNum;
     }
 
 }

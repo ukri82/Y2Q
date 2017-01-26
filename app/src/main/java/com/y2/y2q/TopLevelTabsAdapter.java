@@ -18,7 +18,15 @@ public class TopLevelTabsAdapter extends FragmentStatePagerAdapter
     @Override
     public Fragment getItem(int position)
     {
-        OrganizationFragment fragment = new OrganizationFragment();
+        Fragment fragment = null;
+        if(position == 0)
+        {
+            fragment = new TokenFragment();
+        }
+        else if( position == 1)
+        {
+            fragment = new OrganizationFragment();
+        }
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -33,9 +41,9 @@ public class TopLevelTabsAdapter extends FragmentStatePagerAdapter
     @Override
     public CharSequence getPageTitle(int position)
     {
-        String title = "Organizations";
+        String title = "Tokens";
         if(position == 1)
-            title = "Tokens";
+            title = "Organizations";
 
         return title;
     }

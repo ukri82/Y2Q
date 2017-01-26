@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/activity_create_token_slot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.y2.y2q.CreateTokenSlotActivity">
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:gravity="center"
+                  android:orientation="vertical"
+                  android:weightSum="3">
+
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:orientation="horizontal"
+                      android:weightSum="2"
+        android:layout_weight="1">
+            <TextView android:id="@+id/queue_number_label"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:text="Queue Number"
+                      android:textSize="24sp"/>
+
+            <EditText android:id="@+id/queue_number"
+                      android:layout_width="@dimen/subscribe_button_size"
+                      android:layout_height="wrap_content"
+                      android:background="@drawable/edit_text_background"
+                      android:inputType="number"
+                      android:textSize="48sp"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:orientation="horizontal"
+                      android:weightSum="2"
+                      android:layout_weight="1">
+
+            <TextView android:id="@+id/queue_qr_label"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:text="Scan QR code"
+                      android:textSize="24sp"/>
+
+            <ImageButton android:id="@+id/scan_qr_code"
+                         android:layout_width="@dimen/subscribe_button_size"
+                         android:layout_height="@dimen/subscribe_button_size"
+                         android:background="@drawable/ripple"
+                         android:scaleType="fitCenter"
+                         android:src="@drawable/scan_qr"
+            />
+
+        </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="center"
+                  android:orientation="horizontal"
+                  android:weightSum="2"
+                  android:layout_weight="1">
+
+        <TextView android:id="@+id/queue_name"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:text="Queue Name"
+                  android:textSize="24sp"/>
+
+        <ImageButton android:id="@+id/subscribe_to_queue_by_number"
+                     android:layout_width="@dimen/subscribe_button_size"
+                     android:layout_height="@dimen/subscribe_button_size"
+                     android:background="@drawable/ripple"
+                     android:scaleType="fitCenter"
+                     android:src="@drawable/subscribe_id"
+        />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -19,7 +19,7 @@ public class ServerIPProvider implements TaskGetServerIPs.TaskGetServerIPsQueryL
 
     public static void create()
     {
-        new TaskGetServerIPs(myInstance, DeviceIdentity.get(), "sevencenter6105.cloudapp.net").execute();
+            new TaskGetServerIPs(myInstance, DeviceIdentity.get(), "sevencenter6105.cloudapp.net").execute();
     }
 
     @Override

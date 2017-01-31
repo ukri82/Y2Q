@@ -21,7 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".CreateTokenSlotActivity">
+        <activity android:name=".CreateTokenSlotActivity"
+                  android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".TokenSlotActivity" android:noHistory="true"
+                  android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

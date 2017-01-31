@@ -1,6 +1,8 @@
-package com.y2.y2q.model;
+package com.y2.y2q.ServerInterface;
 
 import com.y2.y2q.ServerInterface.Endpoints;
+import com.y2.y2q.model.QueueDetails;
+import com.y2.y2q.model.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;

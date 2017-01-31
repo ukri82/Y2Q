@@ -24,7 +24,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TokenFragment extends Fragment implements TaskLoadTokenSlots.TaskSlotsLoadedListener
+public class TokenFragment extends Fragment implements TaskLoadTokenSlots.TaskSlotsLoadedListener, TokenSlotListAdapter.TokenSlotClickListener
 {
 
     private RecyclerView mTokenListView;
@@ -54,6 +54,7 @@ public class TokenFragment extends Fragment implements TaskLoadTokenSlots.TaskSl
 
         // specify an adapter (see also next example)
         mAdapter = new TokenSlotListAdapter();
+        mAdapter.registerTokenSlotClickListener(this);
 
         mTokenListView.setAdapter(mAdapter);
 
@@ -115,5 +116,13 @@ public class TokenFragment extends Fragment implements TaskLoadTokenSlots.TaskSl
     public void onTaskSlotsLoaded(ArrayList<TokenSlot> listTokenSlots)
     {
         mAdapter.appendTokenSlotList(listTokenSlots);
+    }
+
+    @Override
+    public void onClick(TokenSlot slot)
+    {
+        Intent intent = new Intent(this.getActivity(), TokenSlotActivity.class);
+        intent.putExtra(TokenSlot.TOKEN_SLOT_OBJ, slot);
+        startActivity(intent);
     }
 }

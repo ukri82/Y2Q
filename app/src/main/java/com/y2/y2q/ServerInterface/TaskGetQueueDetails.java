@@ -1,13 +1,10 @@
-package com.y2.y2q;
+package com.y2.y2q.ServerInterface;
 
 import android.os.AsyncTask;
 
 import com.android.volley.RequestQueue;
-import com.y2.y2q.ServerInterface.Endpoints;
-import com.y2.y2q.ServerInterface.Requestor;
 import com.y2.y2q.model.QueueDetails;
 import com.y2.y2q.misc.VolleySingleton;
-import com.y2.y2q.model.QueueDetailsResultParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +45,7 @@ public class TaskGetQueueDetails extends AsyncTask<Void, Void, QueueDetails>
         QueueDetails queueDetails = null;
         try
         {
-            if(response.getJSONArray("QueueData").length() > 0)
+            if(response != null && response.getJSONArray("QueueData").length() > 0)
             {
                 JSONObject queueData = response.getJSONArray("QueueData").getJSONObject(0);
 

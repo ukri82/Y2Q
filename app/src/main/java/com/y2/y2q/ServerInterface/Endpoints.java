@@ -48,6 +48,30 @@ public class Endpoints
         return aQueryString;
     }
 
+    public static String getRequestUrlCreateTokenSlot(String phoneId, String qSlotId)
+    {
+        //create_token_slot
+        String aQueryString = "http://" + myServerIp + "/y2q/default/create_token_slot" + "?PhoneId=" + phoneId + "&QueueSlotId=" + qSlotId;
+
+        return aQueryString;
+    }
+
+    public static String getRequestUrlGetTokenSlot(String tokenSlotId)
+    {
+        //get_token_slot
+        String aQueryString = "http://" + myServerIp + "/y2q/default/get_token_slot" + "?TokenSlotId=" + tokenSlotId;
+
+        return aQueryString;
+    }
+
+    public static String getRequestUrlNextQueueChunk(int aStart_in, int limit, String deviceId)
+    {
+        //get_previous_queues
+        String aQueryString = "http://" + myServerIp + "/y2q/default/get_previous_queues" + "?Start=" + aStart_in + "&Count=" + limit + "&DeviceId=" + deviceId;
+
+        return aQueryString;
+    }
+
     public static String getImageDownloadURL(String photoURL)
     {
         String imageURL = "http://" + myServerIp + "/y2q/default/download/" + photoURL;

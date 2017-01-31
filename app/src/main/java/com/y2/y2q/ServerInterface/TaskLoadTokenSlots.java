@@ -4,10 +4,7 @@ import android.os.AsyncTask;
 
 import com.android.volley.RequestQueue;
 import com.y2.y2q.misc.VolleySingleton;
-import com.y2.y2q.model.OrgResultParser;
-import com.y2.y2q.model.Organization;
 import com.y2.y2q.model.TokenSlot;
-import com.y2.y2q.model.TokenSlotResultParser;
 
 import org.json.JSONObject;
 

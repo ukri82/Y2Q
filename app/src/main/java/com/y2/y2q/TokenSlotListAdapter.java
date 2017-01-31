@@ -26,15 +26,26 @@ public class TokenSlotListAdapter extends RecyclerView.Adapter<TokenSlotListAdap
 {
     private ArrayList<TokenSlot> mDataset = new ArrayList<>();
 
+    public interface TokenSlotClickListener
+    {
+        public void onClick(TokenSlot slot);
+    }
 
     private VolleySingleton myVolleySingleton;
     private ImageLoader myImageLoader;
     private int myPreviousPosition = 0;
 
+    TokenSlotClickListener mListener;
+
     public TokenSlotListAdapter()
     {
         myVolleySingleton = VolleySingleton.getInstance(null);
         myImageLoader = myVolleySingleton.getImageLoader();
+    }
+
+    public void registerTokenSlotClickListener(TokenSlotClickListener listener)
+    {
+        mListener = listener;
     }
 
     public void appendTokenSlotList(List<TokenSlot> data)
@@ -112,11 +123,22 @@ public class TokenSlotListAdapter extends RecyclerView.Adapter<TokenSlotListAdap
     }*/
 
     @Override
-    public void onBindViewHolder(TokenSlotListAdapter.ViewHolder holder, int position)
+    public void onBindViewHolder(TokenSlotListAdapter.ViewHolder holder, final int position)
     {
         holder.mTextView.setText(mDataset.get(position).mName);
         holder.mTokenView.setText(mDataset.get(position).mCurrentTokenNumber + "");
 
+        holder.mParentView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if(mListener != null)
+                {
+                    mListener.onClick(mDataset.get(position));
+                }
+            }
+        });
         //setOrgImage(mDataset.get(position), holder.mPictureView);
 
         if (position > myPreviousPosition)

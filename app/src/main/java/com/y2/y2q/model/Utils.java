@@ -1,5 +1,10 @@
 package com.y2.y2q.model;
 
+import android.widget.ImageView;
+
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -88,4 +93,28 @@ public class Utils
         return returnNum;
     }
 
+    public static void setImage(ImageLoader imageLoader, String urlThumbnail, final ImageView imageView, final int defaultResId)
+    {
+
+        if (!urlThumbnail.equals("N.A") && !urlThumbnail.equals(""))
+        {
+            imageLoader.get(urlThumbnail, new ImageLoader.ImageListener()
+            {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate)
+                {
+                    imageView.setImageBitmap(response.getBitmap());
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError error)
+                {
+                    imageView.setImageResource(defaultResId);
+                }
+            });
+        } else
+        {
+            imageView.setImageResource(defaultResId);
+        }
+    }
 }

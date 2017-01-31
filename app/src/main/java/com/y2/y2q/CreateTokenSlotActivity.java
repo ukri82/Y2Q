@@ -4,11 +4,14 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,77 +19,44 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.y2.y2q.ServerInterface.ServerIPProvider;
+import com.y2.y2q.ServerInterface.TaskCreateTokenSlot;
+import com.y2.y2q.ServerInterface.TaskGetQueueDetails;
 import com.y2.y2q.misc.PermissionChecker;
+import com.y2.y2q.misc.VolleySingleton;
+import com.y2.y2q.model.DeviceIdentity;
 import com.y2.y2q.model.QueueDetails;
+import com.y2.y2q.model.TokenSlot;
 
-public class CreateTokenSlotActivity extends AppCompatActivity implements TaskGetQueueDetails.QueueDetailsListener
+public class CreateTokenSlotActivity extends AppCompatActivity
 {
 
-    QueueDetails mQueueDetails;
+    CreateTokenSlotTabsAdapter mTopLevelTabsAdapter;
+    ViewPager mViewPager;
+
+    ServerIPProvider myServerIPProvider = new ServerIPProvider();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_token_slot);
 
-        final Activity activity = this;
-        findViewById(R.id.scan_qr_code).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                if(new PermissionChecker(activity).checkPermission(Manifest.permission.CAMERA))
-                {
-                    initiateQR();
-                }
+        VolleySingleton.getInstance(this);  //  Just initialize the singleton
+        DeviceIdentity.initialize(this);
+        myServerIPProvider.create();
 
-            }
-        });
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        initializeQueueNumberEdit();
+        mTopLevelTabsAdapter = new CreateTokenSlotTabsAdapter( getSupportFragmentManager() );
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mTopLevelTabsAdapter);
 
     }
 
-    private void initializeQueueNumberEdit()
-    {
-        final TaskGetQueueDetails.QueueDetailsListener listener = this;
-
-        EditText editText = (EditText)findViewById(R.id.queue_number);
-        editText.addTextChangedListener(new TextWatcher()
-        {
-
-            public void onTextChanged(CharSequence s, int start, int before,
-                                      int count)
-            {
-
-
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-
-            }
-
-            public void afterTextChanged(Editable s)
-            {
-                String queueId = s.toString();
-                if(!queueId.isEmpty() )
-                {
-                    new TaskGetQueueDetails(listener, queueId).execute();
-                }
-            }
-        });
-    }
-
-    private void initiateQR()
-    {
-        IntentIntegrator integrator = new IntentIntegrator(this);
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
-        integrator.setPrompt("Scan a barcode");
-        integrator.setCameraId(0);  // Use a specific camera of the device
-        integrator.setBeepEnabled(false);
-        integrator.initiateScan();
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
@@ -94,14 +64,7 @@ public class CreateTokenSlotActivity extends AppCompatActivity implements TaskGe
         switch (requestCode)
         {
             case PermissionChecker.RequestCode:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    initiateQR();
-                }
-                else
-                {
-                    Toast.makeText(this, "Permission denied to access the camera. Please enter the Queue code above and subscribe", Toast.LENGTH_SHORT).show();
-                }
+                mTopLevelTabsAdapter.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -114,25 +77,7 @@ public class CreateTokenSlotActivity extends AppCompatActivity implements TaskGe
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if(result != null)
         {
-            if(result.getContents() == null)
-            {
-                Log.d("MainActivity", "Cancelled scan");
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-            }
-            else
-            {
-                Log.d("MainActivity", "Scanned");
-                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
-
-                String scannedCode = result.getContents();
-                int index = scannedCode.indexOf("queueid=");
-                if(index != -1)
-                {
-                    scannedCode = scannedCode.substring(index);
-                }
-
-                new TaskGetQueueDetails(this, scannedCode).execute();
-            }
+            mTopLevelTabsAdapter.onActivityResult(result);
         }
         else
         {
@@ -142,14 +87,14 @@ public class CreateTokenSlotActivity extends AppCompatActivity implements TaskGe
     }
 
     @Override
-    public void onQueueDetails(QueueDetails queueDetails)
+    public boolean onOptionsItemSelected(MenuItem item)
     {
-        if(queueDetails != null)
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home)
         {
-            mQueueDetails = queueDetails;
-
-            TextView qView = (TextView) findViewById(R.id.queue_name);
-            qView.setText(mQueueDetails.mName);
+            finish(); // close this activity and return to preview activity (if there is any)
         }
+
+        return super.onOptionsItemSelected(item);
     }
 }

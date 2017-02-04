@@ -1,6 +1,5 @@
 package com.y2.y2q;
 
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.y2.serverinterface.VolleySingleton;
 import com.y2.utils.AnimationUtils;
 import com.y2.y2q.model.TokenSlot;
 
@@ -29,16 +26,14 @@ public class TokenSlotListAdapter extends RecyclerView.Adapter<TokenSlotListAdap
         public void onClick(TokenSlot slot);
     }
 
-    private VolleySingleton myVolleySingleton;
-    private ImageLoader myImageLoader;
     private int myPreviousPosition = 0;
+    int mPrevSelection = -1;
 
     TokenSlotClickListener mListener;
 
     public TokenSlotListAdapter()
     {
-        myVolleySingleton = VolleySingleton.getInstance(null);
-        myImageLoader = myVolleySingleton.getImageLoader();
+
     }
 
     public void registerTokenSlotClickListener(TokenSlotClickListener listener)
@@ -54,10 +49,34 @@ public class TokenSlotListAdapter extends RecyclerView.Adapter<TokenSlotListAdap
         notifyItemRangeInserted(aNumItems, data.size());
     }
 
-    public void add(ArrayList<TokenSlot> dataset)
+    public void add(TokenSlot dataset)
     {
-        mDataset = dataset;
+        mDataset.add(0, dataset);
+        notifyItemRangeInserted(0, 1);
     }
+
+    public void remove(TokenSlot dataset)
+    {
+        for(int i = 0; i < mDataset.size(); i++)
+        {
+            if(mDataset.get(i).mId.compareTo(dataset.mId) == 0)
+            {
+                mDataset.remove(i);
+                notifyItemRangeRemoved(i, 1);
+                break;
+            }
+        }
+    }
+
+    public TokenSlot getFirst()
+    {
+        TokenSlot slot = null;
+        if(mDataset.size() > 0)
+            slot = mDataset.get(0);
+
+        return slot;
+    }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -87,39 +106,6 @@ public class TokenSlotListAdapter extends RecyclerView.Adapter<TokenSlotListAdap
         return vh;
     }
 
-    /*private void setOrgImage(final Organization organization, final ImageView imageView)
-    {
-        if (!organization.mPhotoURL.equals("N.A") && !organization.mPhotoURL.equals(""))
-        {
-            if (organization.mBitmap == null)
-            {
-                myImageLoader.get(organization.mPhotoURL, new ImageLoader.ImageListener()
-                {
-                    @Override
-                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate)
-                    {
-                        organization.mBitmap = response.getBitmap();
-                        imageView.setImageBitmap(organization.mBitmap);
-                    }
-
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {
-                        imageView.setImageResource(R.drawable.organization);
-                    }
-                });
-            }
-            else
-            {
-                imageView.setImageBitmap(organization.mBitmap);
-            }
-        }
-        else
-        {
-            imageView.setImageResource(R.drawable.organization);
-        }
-    }*/
-
     @Override
     public void onBindViewHolder(TokenSlotListAdapter.ViewHolder holder, final int position)
     {
@@ -131,6 +117,8 @@ public class TokenSlotListAdapter extends RecyclerView.Adapter<TokenSlotListAdap
             @Override
             public void onClick(View view)
             {
+
+                view.setBackgroundColor(view.getContext().getResources().getColor(R.color.primary_light));
                 if(mListener != null)
                 {
                     mListener.onClick(mDataset.get(position));
@@ -148,6 +136,13 @@ public class TokenSlotListAdapter extends RecyclerView.Adapter<TokenSlotListAdap
             AnimationUtils.animateSunblind(holder, false);
         }
     }
+
+    /*void selectItem(int currentPos)
+    {
+        GridLayoutManager layoutManager = ((GridLayoutManager)getLayoutManager());
+        int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
+
+    }*/
 
     @Override
     public int getItemCount()

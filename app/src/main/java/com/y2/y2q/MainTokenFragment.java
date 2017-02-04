@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -72,20 +73,36 @@ public class MainTokenFragment extends LinearLayout
         mTokenSlot = slot;
         updateUI();
 
-        mUpdateTokenRunnable = new Runnable()
+        if(mUpdateTokenRunnable != null)
+            mHandler.removeCallbacks(mUpdateTokenRunnable);
+
+        if(mTokenSlot != null)
         {
-            @Override
-            public void run()
+            mUpdateTokenRunnable = new Runnable()
             {
-                getTokenDetails(mTokenSlot.mId);
-                mHandler.postDelayed(this,5000);
-            }
-        };
-        mHandler.postDelayed(mUpdateTokenRunnable,5000);
+                @Override
+                public void run()
+                {
+                    getTokenDetails(mTokenSlot.mId);
+                    mHandler.postDelayed(this, 5000);
+                }
+            };
+            mHandler.postDelayed(mUpdateTokenRunnable, 5000);
+        }
 
 
     }
 
+    public interface QueueSlotUnsubscribeListener
+    {
+        public void onUnsubscribe(TokenSlot slot );
+    }
+
+    QueueSlotUnsubscribeListener mUnsubListener;
+    public void registerUnsubscribeListener(QueueSlotUnsubscribeListener listener)
+    {
+        mUnsubListener = listener;
+    }
     void getTokenDetails(String tokenSlotId)
     {
         ServerQuery query = new ServerQuery("get_token_slot", "y2q/default");
@@ -113,21 +130,40 @@ public class MainTokenFragment extends LinearLayout
         task.execute();
     }
 
-    /*@Override
-    public void onDestroyView()
-    {
-        super.onDestroyView();
-        mHandler.removeCallbacks(mUpdateTokenRunnable);
-    }*/
 
     void updateUI()
     {
-        ((TextView)findViewById(R.id.main_title)).setText(mTokenSlot.mName);
+        String name = "";
+        if(mTokenSlot != null)
+            name = mTokenSlot.mName;
+        ((TextView)findViewById(R.id.main_title)).setText(name);
         //((TextView)findViewById(R.id.token)).setText(mTokenSlot.mCurrentTokenNumber + "");
 
+        int progress = 0;
+        if(mTokenSlot != null)
+            progress = mTokenSlot.mCurrentTokenNumber;
         CircleCountDownView countDownView = (CircleCountDownView)findViewById(R.id.circle_count_down_view);
-        countDownView.setProgress(mTokenSlot.mCurrentTokenNumber);
+        countDownView.setProgress(progress);
+
+        OnClickListener listener = null;
+        if(mTokenSlot != null)
+        {
+            listener = new OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    if(mUnsubListener != null)
+                    {
+                        mUnsubListener.onUnsubscribe(mTokenSlot);
+                    }
+                }
+            };
+        }
+        findViewById(R.id.unsubscribe_button).setOnClickListener(listener);
     }
+
+
 
     public void close()
     {

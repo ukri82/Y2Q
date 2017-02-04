@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import com.y2.serverinterface.ServerQuery;
 import com.y2.serverinterface.ServerQueryChunkTask;
 import com.y2.serverinterface.DeviceIdentity;
+import com.y2.serverinterface.ServerQueryTask;
 import com.y2.y2q.ServerInterface.TokenSlotResultParser;
 import com.y2.y2q.model.TokenSlot;
 
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TokenSlotFragment extends FrameLayout implements TokenSlotListAdapter.TokenSlotClickListener
+public class TokenSlotFragment extends FrameLayout implements TokenSlotListAdapter.TokenSlotClickListener, MainTokenFragment.QueueSlotUnsubscribeListener
 {
 
     private RecyclerView mTokenListView;
@@ -71,6 +72,7 @@ public class TokenSlotFragment extends FrameLayout implements TokenSlotListAdapt
     {
         //mMainTokenFragment = (MainTokenFragment)mActivity.getFragmentManager().findFragmentById(R.id.fragment_id_main_token);
         mMainTokenFragment = (MainTokenFragment)findViewById(R.id.fragment_id_main_token);
+        mMainTokenFragment.registerUnsubscribeListener(this);
         mTokenListView = (RecyclerView) findViewById(R.id.token_list_view);
         mLayoutManager = new LinearLayoutManager(this.getContext());
         mTokenListView.setLayoutManager(mLayoutManager);
@@ -105,14 +107,21 @@ public class TokenSlotFragment extends FrameLayout implements TokenSlotListAdapt
 
     void populateTokenSlots()
     {
-        ServerQuery query = new ServerQuery("get_token_slots", "y2q/default", 0, 10);
+        ServerQuery query = new ServerQuery("get_token_slots", "y2q/default", mAdapter.getItemCount(), 10);
         query.addParam("PhoneId", DeviceIdentity.get());
         ServerQueryChunkTask<TokenSlot> task = new ServerQueryChunkTask(new ServerQueryChunkTask.ServerQueryTaskListener<TokenSlot>()
         {
             @Override
             public void onResults(ArrayList<TokenSlot> dataList)
             {
+
+                if(mAdapter.getItemCount() == 0 && dataList.size() == 0)
+                    mMainTokenFragment.selectTokenSlot(null);
+                else if(mAdapter.getItemCount() == 0 && dataList.size() > 0)
+                    mMainTokenFragment.selectTokenSlot(dataList.get(0));
+
                 mAdapter.appendTokenSlotList(dataList);
+
             }
         }, new ServerQueryChunkTask.ServerQueryChunkTaskResultParser<TokenSlot>()
         {
@@ -171,6 +180,7 @@ public class TokenSlotFragment extends FrameLayout implements TokenSlotListAdapt
 
     public void newTokenSlotCreated(TokenSlot slot)
     {
+        mAdapter.add(slot);
         mMainTokenFragment.selectTokenSlot(slot);
     }
 
@@ -180,5 +190,35 @@ public class TokenSlotFragment extends FrameLayout implements TokenSlotListAdapt
         {
             mMainTokenFragment.close();
         }
+    }
+
+    @Override
+    public void onUnsubscribe(TokenSlot slot)
+    {
+        mAdapter.remove(slot);
+        unsubscribeTokenSlot(slot.mId);
+    }
+
+    void unsubscribeTokenSlot(String tokenSlotId)
+    {
+        ServerQuery query = new ServerQuery("unsubscribe_token_slot", "y2q/default");
+        query.addParam("TokenSlotId", tokenSlotId);
+        ServerQueryTask<TokenSlot> task = new ServerQueryTask(new ServerQueryTask.ServerQueryTaskListener<TokenSlot>()
+        {
+            @Override
+            public void onResults(TokenSlot tokenSlot)
+            {
+                mMainTokenFragment.selectTokenSlot(mAdapter.getFirst());
+            }
+        }, new ServerQueryTask.ServerQueryTaskResultParser<TokenSlot>()
+        {
+            @Override
+            public TokenSlot parse(JSONObject response)
+            {
+                return null;
+            }
+        },
+                query);
+        task.execute();
     }
 }

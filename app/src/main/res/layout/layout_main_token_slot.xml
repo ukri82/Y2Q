@@ -1,17 +1,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-              android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
               android:background="@color/card_background"
+              android:orientation="vertical"
               android:padding="16dp"
-
-             tools:context="com.y2.y2q.MainTokenFragment">
+              tools:context="com.y2.y2q.MainTokenFragment">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-android:layout_weight="1"
+                    android:layout_height="wrap_content"
 
     >
 
@@ -31,31 +29,30 @@ android:layout_weight="1"
                   android:layout_height="wrap_content"
                   android:layout_alignParentLeft="true"
                   android:layout_below="@+id/main_title"
-                  android:padding="5dp"
                   android:layout_marginRight="85dp"
-                  android:text="Address"
                   android:inputType="textMultiLine"
-                  android:textSize="10sp"
-                  android:textColor="@color/primary_text"/>
+                  android:padding="5dp"
+                  android:text="Address"
+                  android:textColor="@color/primary_text"
+                  android:textSize="10sp"/>
 
         <TextView android:id="@+id/main_token"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_alignParentLeft="true"
                   android:layout_below="@+id/main_address"
-                  android:padding="5dp"
                   android:layout_marginRight="85dp"
-                  android:text="Token"
                   android:inputType="textMultiLine"
-                  android:textSize="10sp"
-                  android:textColor="@color/primary_text"/>
+                  android:padding="5dp"
+                  android:text="Token"
+                  android:textColor="@color/primary_text"
+                  android:textSize="10sp"/>
 
         <ImageView android:id="@+id/main_picture"
                    android:layout_width="80dp"
                    android:layout_height="80dp"
-                   android:layout_alignParentTop="true"
-                   android:layout_alignParentRight="true"/>
-
+                   android:layout_alignParentRight="true"
+                   android:layout_alignParentTop="true"/>
 
 
     </RelativeLayout>
@@ -66,7 +63,12 @@ android:layout_weight="1"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
-        android:layout_margin="5dp"/>
+        android:layout_weight="1"/>
+
+    <ImageButton android:id="@+id/unsubscribe_button"
+                 android:layout_width="40dp"
+                 android:layout_height="40dp"
+                 android:layout_gravity="right"
+                 android:background="@drawable/ic_delete_black_48dp"/>
 
 </LinearLayout>

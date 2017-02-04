@@ -79,7 +79,7 @@ public class AllPrevQueuesFragment extends Fragment implements QueueListAdapter.
 
     void populatePreviousQueues()
     {
-        ServerQuery query = new ServerQuery("get_previous_queues", "y2q/default", 0, 10);
+        ServerQuery query = new ServerQuery("get_previous_queues", "y2q/default", mAdapter.getItemCount(), 10);
         query.addParam("PhoneId", DeviceIdentity.get());
         ServerQueryChunkTask<TokenSlot> task = new ServerQueryChunkTask(new ServerQueryChunkTask.ServerQueryTaskListener<Queue>()
         {

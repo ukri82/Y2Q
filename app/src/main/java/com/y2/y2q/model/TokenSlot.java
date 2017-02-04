@@ -12,6 +12,7 @@ import java.util.Date;
 public class TokenSlot implements Serializable
 {
     public static String TOKEN_SLOT_OBJ = "TokenSlot";
+    public static final int CREATE_TOKEN_SLOT_REQUEST = 1;
 
     public String mName;
     public String mId;

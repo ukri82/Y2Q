@@ -1,7 +1,5 @@
 package com.y2.y2q;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -11,13 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.y2.y2q.ServerInterface.TaskGetQueueDetails;
-import com.y2.y2q.model.QueueDetails;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EnterQueueDetailsFragment extends Fragment implements TaskGetQueueDetails.QueueDetailsListener
+public class EnterQueueDetailsFragment extends Fragment
 {
     QueueDetailsHandler mQHandler;
 
@@ -45,7 +41,6 @@ public class EnterQueueDetailsFragment extends Fragment implements TaskGetQueueD
 
     private void initializeQueueNumberEdit()
     {
-        final TaskGetQueueDetails.QueueDetailsListener listener = this;
 
         EditText editText = (EditText)getView().findViewById(R.id.queue_number);
         editText.addTextChangedListener(new TextWatcher()
@@ -68,20 +63,14 @@ public class EnterQueueDetailsFragment extends Fragment implements TaskGetQueueD
                 String queueId = s.toString();
                 if(!queueId.isEmpty() )
                 {
-                    new TaskGetQueueDetails(listener, queueId).execute();
+                    if(mQHandler == null)
+                    {
+                        mQHandler = new QueueDetailsHandler(getActivity(), getView().findViewById(R.id.new_queue_card));
+                    }
+                    mQHandler.getQueueDetails(queueId);
                 }
             }
         });
-    }
-
-    @Override
-    public void onQueueDetails(QueueDetails queueDetails)
-    {
-        if(queueDetails != null)
-        {
-            mQHandler = new QueueDetailsHandler(this.getActivity(), getView().findViewById(R.id.new_queue_card), queueDetails);
-            mQHandler.initializeQueueHandler();
-        }
     }
 
 }

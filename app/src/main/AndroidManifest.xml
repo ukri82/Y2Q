@@ -24,9 +24,7 @@
         <activity android:name=".CreateTokenSlotActivity"
                   android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".TokenSlotActivity" android:noHistory="true"
-                  android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+
     </application>
 
 </manifest>

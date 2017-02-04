@@ -5,10 +5,16 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.y2.y2q.ServerInterface.TaskCreateTokenSlot;
-import com.y2.y2q.model.DeviceIdentity;
+import com.y2.serverinterface.ServerQuery;
+import com.y2.serverinterface.ServerQueryTask;
+import com.y2.y2q.ServerInterface.QueueDetailsResultParser;
+import com.y2.serverinterface.DeviceIdentity;
+import com.y2.y2q.ServerInterface.TokenSlotResultParser;
 import com.y2.y2q.model.QueueDetails;
 import com.y2.y2q.model.TokenSlot;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by u on 31.01.2017.
@@ -20,11 +26,10 @@ public class QueueDetailsHandler
     Activity mActivity;
     View mQueueView;
 
-    public QueueDetailsHandler(Activity activity, View queueView, QueueDetails queueDetails)
+    public QueueDetailsHandler(Activity activity, View queueView)
     {
         mActivity = activity;
         mQueueView = queueView;
-        mQueueDetails = queueDetails;
     }
 
     public void initializeQueueHandler()
@@ -41,19 +46,69 @@ public class QueueDetailsHandler
                     @Override
                     public void onClick(View view)
                     {
-                        new TaskCreateTokenSlot(new TaskCreateTokenSlot.CreateTokenSlotListener()
-                        {
-                            @Override
-                            public void onCreate(TokenSlot slot)
-                            {
-                                Intent intent = new Intent(mActivity, TokenSlotActivity.class);
-                                intent.putExtra(TokenSlot.TOKEN_SLOT_OBJ, slot);
-                                mActivity.startActivity(intent);
-                            }
-                        }, DeviceIdentity.get(), mQueueDetails.mActiveQueueSlotId).execute();
+
+                        createTokenSlot(mQueueDetails.mActiveQueueSlotId);
                     }
                 });
             }
         }
+    }
+
+    void createTokenSlot(String queueSlotId)
+    {
+        ServerQuery query = new ServerQuery("create_token_slot", "y2q/default");
+        query.addParam("QueueSlotId", queueSlotId);
+        query.addParam("PhoneId", DeviceIdentity.get());
+        ServerQueryTask<TokenSlot> task = new ServerQueryTask(new ServerQueryTask.ServerQueryTaskListener<TokenSlot>()
+        {
+            @Override
+            public void onResults(TokenSlot tokenSlot)
+            {
+                if(tokenSlot != null)
+                {
+                    Intent returnIntent = new Intent(mActivity, mActivity.getClass());
+                    returnIntent.putExtra(TokenSlot.TOKEN_SLOT_OBJ, tokenSlot);
+                    mActivity.setResult(Activity.RESULT_OK, returnIntent);
+                    mActivity.finish();
+                    //mActivity.startActivity(intent);
+                }
+            }
+        }, new ServerQueryTask.ServerQueryTaskResultParser<TokenSlot>()
+        {
+            @Override
+            public TokenSlot parse(JSONObject response)
+            {
+                return TokenSlotResultParser.parseOne(response);
+            }
+        },
+                query);
+        task.execute();
+    }
+
+    public void getQueueDetails(String queueId)
+    {
+        ServerQuery query = new ServerQuery("get_queue_details", "y2q/default");
+        query.addParam("QueueId", queueId);
+        ServerQueryTask<QueueDetails> task = new ServerQueryTask(new ServerQueryTask.ServerQueryTaskListener<QueueDetails>()
+        {
+            @Override
+            public void onResults(QueueDetails queueDetails)
+            {
+                if(queueDetails != null)
+                {
+                    mQueueDetails = queueDetails;
+                    initializeQueueHandler();
+                }
+            }
+        }, new ServerQueryTask.ServerQueryTaskResultParser<QueueDetails>()
+        {
+            @Override
+            public QueueDetails parse(JSONObject response)
+            {
+                return QueueDetailsResultParser.parse(response);
+            }
+        },
+                query);
+        task.execute();
     }
 }

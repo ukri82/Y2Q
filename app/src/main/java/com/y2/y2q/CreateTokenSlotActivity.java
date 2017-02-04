@@ -1,32 +1,18 @@
 package com.y2.y2q;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.y2.y2q.ServerInterface.ServerIPProvider;
-import com.y2.y2q.ServerInterface.TaskCreateTokenSlot;
-import com.y2.y2q.ServerInterface.TaskGetQueueDetails;
-import com.y2.y2q.misc.PermissionChecker;
-import com.y2.y2q.misc.VolleySingleton;
-import com.y2.y2q.model.DeviceIdentity;
-import com.y2.y2q.model.QueueDetails;
-import com.y2.y2q.model.TokenSlot;
+import com.y2.serverinterface.ServerIPProvider;
+import com.y2.serverinterface.VolleySingleton;
+import com.y2.serverinterface.DeviceIdentity;
+import com.y2.utils.PermissionChecker;
 
 public class CreateTokenSlotActivity extends AppCompatActivity
 {

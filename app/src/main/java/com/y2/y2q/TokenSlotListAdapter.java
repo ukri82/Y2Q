@@ -8,11 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.y2.y2q.misc.AnimationUtils;
-import com.y2.y2q.misc.VolleySingleton;
-import com.y2.y2q.model.Organization;
+import com.y2.serverinterface.VolleySingleton;
+import com.y2.utils.AnimationUtils;
 import com.y2.y2q.model.TokenSlot;
 
 import java.util.ArrayList;
@@ -143,17 +141,11 @@ public class TokenSlotListAdapter extends RecyclerView.Adapter<TokenSlotListAdap
 
         if (position > myPreviousPosition)
         {
-            if(Build.VERSION.SDK_INT >= 11)
-            {
-                AnimationUtils.animateSunblind(holder, true);
-            }
+            AnimationUtils.animateSunblind(holder, true);
         }
         else
         {
-            if(Build.VERSION.SDK_INT >= 11)
-            {
-                AnimationUtils.animateSunblind(holder, false);
-            }
+            AnimationUtils.animateSunblind(holder, false);
         }
     }
 

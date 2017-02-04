@@ -1,8 +1,8 @@
 package com.y2.y2q.ServerInterface;
 
-import com.y2.y2q.ServerInterface.Endpoints;
+import com.y2.serverinterface.Endpoints;
+import com.y2.utils.Utils;
 import com.y2.y2q.model.TokenSlot;
-import com.y2.y2q.model.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +28,7 @@ public class TokenSlotResultParser
                 {
                     JSONObject currentItem = arrayItems.getJSONObject(i);
 
-                    TokenSlot slot = parseOne(arrayItems.getJSONObject(i));
+                    TokenSlot slot = parseItem(arrayItems.getJSONObject(i));
                     if(null != slot)
                         listTokenSlots.add(slot);
                 }
@@ -44,6 +44,25 @@ public class TokenSlotResultParser
     }
 
     public static TokenSlot parseOne(JSONObject response)
+    {
+        TokenSlot slot = null;
+        try
+        {
+            if(response != null && response.getJSONArray("TokenSlotData").length() > 0)
+            {
+                JSONObject queueData = response.getJSONArray("TokenSlotData").getJSONObject(0);
+
+                slot = TokenSlotResultParser.parseItem(queueData);
+            }
+
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        return slot;
+    }
+
+    static TokenSlot parseItem(JSONObject response)
     {
         TokenSlot tokenSlot = new TokenSlot();
         if (response != null)

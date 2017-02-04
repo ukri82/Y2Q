@@ -1,14 +1,11 @@
 package com.y2.y2q.ServerInterface;
 
-import com.y2.y2q.ServerInterface.Endpoints;
+import com.y2.serverinterface.Endpoints;
+import com.y2.utils.Utils;
 import com.y2.y2q.model.QueueDetails;
-import com.y2.y2q.model.Utils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 /**
  * Created by Windows on 02-03-2015.
@@ -16,7 +13,7 @@ import java.util.ArrayList;
 public class QueueDetailsResultParser
 {
 
-    public static QueueDetails parse(JSONObject response)
+    public static QueueDetails parseOne(JSONObject response)
     {
         QueueDetails queueDetails = new QueueDetails();
         if (response != null && response.length() > 0)
@@ -36,7 +33,7 @@ public class QueueDetailsResultParser
                     queueDetails.mPhotoURL = Endpoints.getImageDownloadURL(imgURL);
                 }
 
-                if(currentQSlotItem != null)
+                if (currentQSlotItem != null)
                 {
                     queueDetails.mActiveQueueSlotId = Utils.get(currentQSlotItem, "id");
 
@@ -48,15 +45,32 @@ public class QueueDetailsResultParser
                 queueDetails.mCurrentTokenNumber = Utils.parseInt(currentQSlotItem, "m_token_number");
                 queueDetails.mExpectedTokens = Utils.parseInt(currentQSlotItem, "m_expected_tokens");
 
+            } catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
         }
-        catch(JSONException e)
-        {
-            e.printStackTrace();
-        }
-    }
 
         return queueDetails;
     }
 
 
+    public static QueueDetails parse(JSONObject response)
+    {
+        QueueDetails queueDetails = null;
+        try
+        {
+            if(response != null && response.getJSONArray("QueueData").length() > 0)
+            {
+                JSONObject queueData = response.getJSONArray("QueueData").getJSONObject(0);
+
+                queueDetails = parseOne(queueData);
+            }
+
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        return queueDetails;
+    }
 }

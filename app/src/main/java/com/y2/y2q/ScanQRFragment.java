@@ -3,32 +3,24 @@ package com.y2.y2q;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.y2.y2q.ServerInterface.TaskCreateTokenSlot;
-import com.y2.y2q.ServerInterface.TaskGetQueueDetails;
-import com.y2.y2q.misc.PermissionChecker;
-import com.y2.y2q.model.DeviceIdentity;
-import com.y2.y2q.model.QueueDetails;
-import com.y2.y2q.model.TokenSlot;
+import com.y2.utils.PermissionChecker;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ScanQRFragment extends Fragment implements TaskGetQueueDetails.QueueDetailsListener
+public class ScanQRFragment extends Fragment
 {
 
     QueueDetailsHandler mQHandler;
@@ -114,19 +106,14 @@ public class ScanQRFragment extends Fragment implements TaskGetQueueDetails.Queu
             if(index != -1)
             {
                 scannedCode = scannedCode.substring(index + new String("queueid=").length());
+                if(mQHandler == null)
+                {
+                    mQHandler = new QueueDetailsHandler(this.getActivity(), getView().findViewById(R.id.new_queue_card));
+                }
+                mQHandler.getQueueDetails(scannedCode);
             }
 
-            new TaskGetQueueDetails(this, scannedCode).execute();
         }
     }
 
-    @Override
-    public void onQueueDetails(QueueDetails queueDetails)
-    {
-        if(queueDetails != null)
-        {
-            mQHandler = new QueueDetailsHandler(this.getActivity(), getView().findViewById(R.id.new_queue_card), queueDetails);
-            mQHandler.initializeQueueHandler();
-        }
-    }
 }

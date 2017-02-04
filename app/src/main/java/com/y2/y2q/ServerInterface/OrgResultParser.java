@@ -1,15 +1,13 @@
 package com.y2.y2q.ServerInterface;
 
-import com.y2.y2q.ServerInterface.Endpoints;
+import com.y2.serverinterface.Endpoints;
+import com.y2.utils.Utils;
 import com.y2.y2q.model.Organization;
-import com.y2.y2q.model.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**

@@ -1,8 +1,8 @@
 package com.y2.y2q.ServerInterface;
 
+import com.y2.serverinterface.Endpoints;
+import com.y2.utils.Utils;
 import com.y2.y2q.model.Queue;
-import com.y2.y2q.model.Utils;
-import com.y2.y2q.ServerInterface.Endpoints;
 
 import org.json.JSONArray;
 import org.json.JSONException;

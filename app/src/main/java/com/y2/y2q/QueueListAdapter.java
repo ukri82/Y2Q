@@ -10,10 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.y2.y2q.misc.AnimationUtils;
-import com.y2.y2q.misc.VolleySingleton;
+import com.y2.serverinterface.VolleySingleton;
+import com.y2.utils.AnimationUtils;
+import com.y2.utils.Utils;
 import com.y2.y2q.model.Queue;
-import com.y2.y2q.model.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,17 +142,11 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
 
         if (position > myPreviousPosition)
         {
-            if(Build.VERSION.SDK_INT >= 11)
-            {
-                AnimationUtils.animateSunblind(holder, true);
-            }
+            AnimationUtils.animateSunblind(holder, true);
         }
         else
         {
-            if(Build.VERSION.SDK_INT >= 11)
-            {
-                AnimationUtils.animateSunblind(holder, false);
-            }
+            AnimationUtils.animateSunblind(holder, false);
         }
     }
 

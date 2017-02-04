@@ -9,11 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.y2.y2q.ServerInterface.TaskGetQueueDetails;
-import com.y2.y2q.ServerInterface.TaskLoadPreviousQueues;
-import com.y2.y2q.model.DeviceIdentity;
+import com.y2.serverinterface.DeviceIdentity;
+import com.y2.serverinterface.ServerQuery;
+import com.y2.serverinterface.ServerQueryChunkTask;
+import com.y2.y2q.ServerInterface.QueueResultParser;
 import com.y2.y2q.model.Queue;
-import com.y2.y2q.model.QueueDetails;
+import com.y2.y2q.model.TokenSlot;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -21,7 +24,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AllPrevQueuesFragment extends Fragment implements QueueListAdapter.QueueClickListener, TaskLoadPreviousQueues.QueuesLoadedListener, TaskGetQueueDetails.QueueDetailsListener
+public class AllPrevQueuesFragment extends Fragment implements QueueListAdapter.QueueClickListener
 {
 
     private RecyclerView mTokenListView;
@@ -53,13 +56,12 @@ public class AllPrevQueuesFragment extends Fragment implements QueueListAdapter.
 
         mTokenListView.setAdapter(mAdapter);
 
-        final TaskLoadPreviousQueues.QueuesLoadedListener listener = this;
         mTokenListView.setOnScrollListener(new EndlessRecyclerOnScrollListener(mLayoutManager)
         {
             @Override
             public void onLoadMore(int current_page)
             {
-                new TaskLoadPreviousQueues(listener, mAdapter.getItemCount(), 10, DeviceIdentity.get()).execute();
+                populatePreviousQueues();
             }
 
 
@@ -72,9 +74,31 @@ public class AllPrevQueuesFragment extends Fragment implements QueueListAdapter.
 
             }
         });
-        new TaskLoadPreviousQueues(listener, mAdapter.getItemCount(), 10, DeviceIdentity.get()).execute();
+        populatePreviousQueues();
     }
 
+    void populatePreviousQueues()
+    {
+        ServerQuery query = new ServerQuery("get_previous_queues", "y2q/default", 0, 10);
+        query.addParam("PhoneId", DeviceIdentity.get());
+        ServerQueryChunkTask<TokenSlot> task = new ServerQueryChunkTask(new ServerQueryChunkTask.ServerQueryTaskListener<Queue>()
+        {
+            @Override
+            public void onResults(ArrayList<Queue> dataList)
+            {
+                mAdapter.appendQueueList(dataList);
+            }
+        }, new ServerQueryChunkTask.ServerQueryChunkTaskResultParser<Queue>()
+        {
+            @Override
+            public ArrayList<Queue> parse(JSONObject response)
+            {
+                return QueueResultParser.parse(response);
+            }
+        },
+                query);
+        task.execute();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,22 +111,12 @@ public class AllPrevQueuesFragment extends Fragment implements QueueListAdapter.
     @Override
     public void onClick(Queue queue)
     {
-        new TaskGetQueueDetails(this, queue.mId).execute();
-    }
-
-    @Override
-    public void onQueuesLoaded(ArrayList<Queue> listQueues)
-    {
-        mAdapter.appendQueueList(listQueues);
-    }
-
-    @Override
-    public void onQueueDetails(QueueDetails queueDetails)
-    {
-        if(queueDetails != null)
+        if(mQHandler == null)
         {
-            mQHandler = new QueueDetailsHandler(this.getActivity(), getView().findViewById(R.id.new_queue_card), queueDetails);
-            mQHandler.initializeQueueHandler();
+            mQHandler = new QueueDetailsHandler(this.getActivity(), getView().findViewById(R.id.new_queue_card));
         }
+        mQHandler.getQueueDetails(queue.mId);
     }
+
+
 }

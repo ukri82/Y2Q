@@ -24,7 +24,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AllPrevQueuesFragment extends Fragment implements QueueListAdapter.QueueClickListener
+public class FavouriteQueuesFragment extends Fragment implements QueueListAdapter.QueueClickListener
 {
 
     private RecyclerView mTokenListView;
@@ -33,11 +33,22 @@ public class AllPrevQueuesFragment extends Fragment implements QueueListAdapter.
     QueueDetailsHandler mQHandler;
 
 
-    public AllPrevQueuesFragment()
+    public interface EmptyFavouritesListener
+    {
+        public void onEmpty();
+    }
+
+    EmptyFavouritesListener mEmptyFavListener;
+
+    public FavouriteQueuesFragment()
     {
 
     }
 
+    public void registerEmptyFavListener(EmptyFavouritesListener listener)
+    {
+        mEmptyFavListener = listener;
+    }
     @Override
     public void onViewCreated(View v, Bundle savedInstanceState)
     {
@@ -86,6 +97,11 @@ public class AllPrevQueuesFragment extends Fragment implements QueueListAdapter.
             @Override
             public void onResults(ArrayList<Queue> dataList)
             {
+                if(mAdapter.getItemCount() == 0 && dataList.size() == 0)
+                {
+                    if(mEmptyFavListener != null)
+                        mEmptyFavListener.onEmpty();
+                }
                 mAdapter.appendQueueList(dataList);
             }
         }, new ServerQueryChunkTask.ServerQueryChunkTaskResultParser<Queue>()

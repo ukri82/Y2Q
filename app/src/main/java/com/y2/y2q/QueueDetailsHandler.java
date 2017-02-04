@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.y2.serverinterface.ServerQuery;
 import com.y2.serverinterface.ServerQueryTask;
@@ -34,23 +35,28 @@ public class QueueDetailsHandler
 
     public void initializeQueueHandler()
     {
-        if(mQueueDetails != null)
+        if (mQueueDetails != null)
         {
             TextView qView = (TextView) mQueueView.findViewById(R.id.queue_name);
             qView.setText(mQueueDetails.mName);
 
-            if(mQueueDetails.mActiveQueueSlotId.compareTo("-1") != -1)
+            mQueueView.findViewById(R.id.subscribe_to_queue).setOnClickListener(new View.OnClickListener()
             {
-                mQueueView.findViewById(R.id.subscribe_to_queue).setOnClickListener(new View.OnClickListener()
+                @Override
+                public void onClick(View view)
                 {
-                    @Override
-                    public void onClick(View view)
-                    {
 
+                    if (mQueueDetails.mActiveQueueSlotId.compareTo("-1") != -1)
+                    {
                         createTokenSlot(mQueueDetails.mActiveQueueSlotId);
                     }
-                });
-            }
+                    else
+                    {
+                        Toast.makeText(mActivity, "Please select a queue first. Make a QR scan or select a previous queue or enter a queue number", Toast.LENGTH_SHORT);
+                    }
+                }
+            });
+
         }
     }
 
@@ -64,7 +70,7 @@ public class QueueDetailsHandler
             @Override
             public void onResults(TokenSlot tokenSlot)
             {
-                if(tokenSlot != null)
+                if (tokenSlot != null)
                 {
                     Intent returnIntent = new Intent(mActivity, mActivity.getClass());
                     returnIntent.putExtra(TokenSlot.TOKEN_SLOT_OBJ, tokenSlot);
@@ -94,7 +100,7 @@ public class QueueDetailsHandler
             @Override
             public void onResults(QueueDetails queueDetails)
             {
-                if(queueDetails != null)
+                if (queueDetails != null)
                 {
                     mQueueDetails = queueDetails;
                     initializeQueueHandler();

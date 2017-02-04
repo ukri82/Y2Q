@@ -1,6 +1,5 @@
 package com.y2.y2q;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +18,8 @@ public class CreateTokenSlotTabsAdapter extends FragmentStatePagerAdapter
     }
 
     ScanQRFragment mScanQRFragment;
+    FavouriteQueuesFragment mFavouritesFragment;
+
 
     @Override
     public Fragment getItem(int position)
@@ -26,7 +27,8 @@ public class CreateTokenSlotTabsAdapter extends FragmentStatePagerAdapter
         Fragment fragment = null;
         if(position == 0)
         {
-            fragment = new AllPrevQueuesFragment();
+            mFavouritesFragment = new FavouriteQueuesFragment();
+            fragment = mFavouritesFragment;
         }
         else if( position == 1)
         {
@@ -43,6 +45,12 @@ public class CreateTokenSlotTabsAdapter extends FragmentStatePagerAdapter
         return fragment;
     }
 
+    public void registerEmptyFavListener(FavouriteQueuesFragment.EmptyFavouritesListener listener)
+    {
+        if(mFavouritesFragment != null)
+            mFavouritesFragment.registerEmptyFavListener(listener);
+    }
+
     @Override
     public int getCount()
     {
@@ -52,7 +60,7 @@ public class CreateTokenSlotTabsAdapter extends FragmentStatePagerAdapter
     @Override
     public CharSequence getPageTitle(int position)
     {
-        String title = "My queues";
+        String title = "Favourites";
         if(position == 1)
             title = "Scan";
 

@@ -1,6 +1,7 @@
 package com.y2.y2q;
 
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,6 +45,19 @@ public class CreateTokenSlotActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void onAttachFragment(Fragment fragment)
+    {
+        super.onAttachFragment(fragment);
+        mTopLevelTabsAdapter.registerEmptyFavListener(new FavouriteQueuesFragment.EmptyFavouritesListener()
+        {
+            @Override
+            public void onEmpty()
+            {
+                mViewPager.setCurrentItem(1);
+            }
+        });
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {

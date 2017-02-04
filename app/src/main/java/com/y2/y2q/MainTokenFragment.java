@@ -10,11 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.y2.serverinterface.ServerQuery;
 import com.y2.serverinterface.ServerQueryTask;
+import com.y2.serverinterface.VolleySingleton;
+import com.y2.utils.Utils;
 import com.y2.y2q.ServerInterface.TokenSlotResultParser;
 import com.y2.y2q.model.QueueDetails;
 import com.y2.y2q.model.TokenSlot;
@@ -29,6 +33,7 @@ public class MainTokenFragment extends LinearLayout
 {
 
     TokenSlot mTokenSlot;
+    private ImageLoader myImageLoader;
 
     private Handler mHandler = new Handler();
 
@@ -137,7 +142,17 @@ public class MainTokenFragment extends LinearLayout
         if(mTokenSlot != null)
             name = mTokenSlot.mName;
         ((TextView)findViewById(R.id.main_title)).setText(name);
-        //((TextView)findViewById(R.id.token)).setText(mTokenSlot.mCurrentTokenNumber + "");
+
+
+        String url = "";
+        if(mTokenSlot != null)
+            url = mTokenSlot.mPhotoURL;
+
+        if(myImageLoader == null)
+            myImageLoader = VolleySingleton.getInstance(null).getImageLoader();
+
+        ImageView imView = (ImageView)findViewById(R.id.main_picture);
+        Utils.setImage(myImageLoader, url, imView, R.drawable.ic_people_black_48dp);
 
         int progress = 0;
         if(mTokenSlot != null)

@@ -19,34 +19,11 @@
                   android:layout_alignParentLeft="true"
                   android:layout_alignParentTop="true"
                   android:padding="5dp"
-                  android:text="Organization"
+                  android:text="Queue"
                   android:textColor="@color/primary_text"
                   android:textSize="16sp"
                   android:textStyle="bold"/>
 
-        <TextView android:id="@+id/main_address"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentLeft="true"
-                  android:layout_below="@+id/main_title"
-                  android:layout_marginRight="85dp"
-                  android:inputType="textMultiLine"
-                  android:padding="5dp"
-                  android:text="Address"
-                  android:textColor="@color/primary_text"
-                  android:textSize="10sp"/>
-
-        <TextView android:id="@+id/main_token"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentLeft="true"
-                  android:layout_below="@+id/main_address"
-                  android:layout_marginRight="85dp"
-                  android:inputType="textMultiLine"
-                  android:padding="5dp"
-                  android:text="Token"
-                  android:textColor="@color/primary_text"
-                  android:textSize="10sp"/>
 
         <ImageView android:id="@+id/main_picture"
                    android:layout_width="80dp"
@@ -66,9 +43,10 @@
         android:layout_weight="1"/>
 
     <ImageButton android:id="@+id/unsubscribe_button"
-                 android:layout_width="40dp"
-                 android:layout_height="40dp"
+                 android:layout_width="48dp"
+                 android:layout_height="48dp"
                  android:layout_gravity="right"
-                 android:background="@drawable/ic_delete_black_48dp"/>
+                 android:background="@drawable/ripple"
+                 android:src="@drawable/ic_delete_black_48dp"/>
 
 </LinearLayout>

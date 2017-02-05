@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.y2.serverinterface.DeviceIdentity;
 import com.y2.serverinterface.ServerQuery;
@@ -30,7 +31,7 @@ public class FavouriteQueuesFragment extends Fragment implements QueueListAdapte
     private RecyclerView mTokenListView;
     private QueueListAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
-    QueueDetailsHandler mQHandler;
+    QueueDetailsView mQHandler;
 
 
     public interface EmptyFavouritesListener
@@ -99,8 +100,15 @@ public class FavouriteQueuesFragment extends Fragment implements QueueListAdapte
             {
                 if(mAdapter.getItemCount() == 0 && dataList.size() == 0)
                 {
+                    showList(false);
+
                     if(mEmptyFavListener != null)
                         mEmptyFavListener.onEmpty();
+
+                }
+                else
+                {
+                    showList(true);
                 }
                 mAdapter.appendQueueList(dataList);
             }
@@ -116,12 +124,28 @@ public class FavouriteQueuesFragment extends Fragment implements QueueListAdapte
         task.execute();
     }
 
+    private void showList(boolean show)
+    {
+        TextView emptyView = (TextView) getView().findViewById(R.id.empty_view);
+
+        if(show)
+        {
+            emptyView.setVisibility(View.GONE);
+            mTokenListView.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mTokenListView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_all_prev_queues, container, false);
+        return inflater.inflate(R.layout.fragment_favourite_queues, container, false);
     }
 
     @Override
@@ -129,9 +153,9 @@ public class FavouriteQueuesFragment extends Fragment implements QueueListAdapte
     {
         if(mQHandler == null)
         {
-            mQHandler = new QueueDetailsHandler(this.getActivity(), getView().findViewById(R.id.new_queue_card));
+            mQHandler = new QueueDetailsView(this.getActivity(), getView().findViewById(R.id.new_queue_card));
         }
-        mQHandler.getQueueDetails(queue.mId);
+        mQHandler.getQueueDetails(queue.mId, true);
     }
 
 

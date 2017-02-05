@@ -89,10 +89,10 @@ public class MainTokenFragment extends LinearLayout
                 public void run()
                 {
                     getTokenDetails(mTokenSlot.mId);
-                    mHandler.postDelayed(this, 5000);
+                    mHandler.postDelayed(this, 10000);
                 }
             };
-            mHandler.postDelayed(mUpdateTokenRunnable, 5000);
+            mHandler.postDelayed(mUpdateTokenRunnable, 10000);
         }
 
 
@@ -138,6 +138,20 @@ public class MainTokenFragment extends LinearLayout
 
     void updateUI()
     {
+        TextView emptyView = (TextView) findViewById(R.id.empty_view);
+
+        if(mTokenSlot == null)
+        {
+            findViewById(R.id.main_token_layout).setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+            return;
+        }
+        else
+        {
+            emptyView.setVisibility(View.GONE);
+            findViewById(R.id.main_token_layout).setVisibility(View.VISIBLE);
+        }
+
         String name = "";
         if(mTokenSlot != null)
             name = mTokenSlot.mName;

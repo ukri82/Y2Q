@@ -55,6 +55,13 @@ public class TokenSlotListAdapter extends RecyclerView.Adapter<TokenSlotListAdap
         notifyItemRangeInserted(0, 1);
     }
 
+    public void clear()
+    {
+        int size = mDataset.size();
+        mDataset.clear();
+        notifyItemRangeRemoved(0, size);
+    }
+
     public void remove(TokenSlot dataset)
     {
         for(int i = 0; i < mDataset.size(); i++)
@@ -107,7 +114,7 @@ public class TokenSlotListAdapter extends RecyclerView.Adapter<TokenSlotListAdap
     }
 
     @Override
-    public void onBindViewHolder(TokenSlotListAdapter.ViewHolder holder, final int position)
+    public void onBindViewHolder(final TokenSlotListAdapter.ViewHolder holder, final int position)
     {
         holder.mTextView.setText(mDataset.get(position).mName);
         holder.mTokenView.setText(mDataset.get(position).mCurrentTokenNumber + "");
@@ -118,10 +125,10 @@ public class TokenSlotListAdapter extends RecyclerView.Adapter<TokenSlotListAdap
             public void onClick(View view)
             {
 
-                view.setBackgroundColor(view.getContext().getResources().getColor(R.color.primary_light));
+                //view.setBackgroundColor(view.getContext().getResources().getColor(R.color.primary_light));
                 if(mListener != null)
                 {
-                    mListener.onClick(mDataset.get(position));
+                    mListener.onClick(mDataset.get(holder.getAdapterPosition()));
                 }
             }
         });

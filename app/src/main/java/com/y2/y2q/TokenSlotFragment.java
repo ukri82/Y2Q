@@ -180,7 +180,10 @@ public class TokenSlotFragment extends FrameLayout implements TokenSlotListAdapt
 
     public void newTokenSlotCreated(TokenSlot slot)
     {
-        mAdapter.add(slot);
+        //mAdapter.add(slot);
+        mMainTokenFragment.selectTokenSlot(null);
+        mAdapter.clear();
+        populateTokenSlots();
         mMainTokenFragment.selectTokenSlot(slot);
     }
 

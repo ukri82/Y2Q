@@ -8,4 +8,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="no_data_available">No favourites. Please scan a QR code to subscribe to a queue</string>
+    <string name="no_tokens_available">Currently you haven\'t subscribed to any tokens. Please subscribe by pressing the + button</string>
+
+    <string name="prompt_qlyid">Please enter a qly here</string>
 </resources>

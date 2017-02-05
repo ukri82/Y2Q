@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -17,14 +17,21 @@
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:background="@color/list_background"/>
 
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="visible"
+        android:textColor="@color/primary_text"
+        android:text="@string/no_data_available" />
 
-    <include layout="@layout/new_queue_slot_card"
+
+    <!--<include layout="@layout/new_queue_slot_card"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:layout_weight="2"
-    ></include>
+             android:layout_weight="2"/>-->
 
-</LinearLayout>
+</FrameLayout>

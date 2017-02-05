@@ -1,11 +1,18 @@
 package com.y2.y2q;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -73,6 +80,15 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
         public TextView mTextView;
         public TextView mAddressView;
         public ImageView mPictureView;
+
+        public ImageButton mArrow;
+        public View mSubsPart;
+        public View mSubsButton;
+
+        private int mOriginalHeight = 0;
+        private boolean mIsViewExpanded = false;
+
+
         public ViewHolder(View v)
         {
             super(v);
@@ -80,6 +96,31 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
             mTextView = (TextView)v.findViewById(R.id.queue_name);
             mAddressView = (TextView)v.findViewById(R.id.queue_address);
             mPictureView = (ImageView)v.findViewById(R.id.queue_picture);
+            mArrow = (ImageButton)v.findViewById(R.id.down_button);
+            mSubsPart = v.findViewById(R.id.queue_subscribe_view);
+            mSubsButton = v.findViewById(R.id.queue_subscribe_button);
+        }
+
+        public void showSubsPart(boolean show)
+        {
+            if(show)
+            {
+                //mSubsPart.setVisibility(View.VISIBLE);
+                mArrow.setImageResource(R.drawable.ic_keyboard_arrow_up_black_48dp);
+                mSubsButton.setVisibility(View.VISIBLE);
+                mIsViewExpanded = true;
+
+
+            }
+            else
+            {
+                mSubsButton.setOnClickListener(null);
+                //mSubsPart.setVisibility(View.INVISIBLE);
+                mArrow.setImageResource(R.drawable.ic_keyboard_arrow_down_black_48dp);
+                mSubsButton.setVisibility(View.GONE);
+                mIsViewExpanded = false;
+                mOriginalHeight = 0;
+            }
         }
     }
 
@@ -94,36 +135,33 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
         return vh;
     }
 
-    /*private void loadImages(String urlThumbnail, final ImageView imageView)
-    {
-        if (!urlThumbnail.equals("N.A") && !urlThumbnail.equals(""))
-        {
-            myImageLoader.get(urlThumbnail, new ImageLoader.ImageListener()
-            {
-                @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate)
-                {
-                    imageView.setImageBitmap(response.getBitmap());
-                }
-
-                @Override
-                public void onErrorResponse(VolleyError error)
-                {
-                    imageView.setImageResource(R.drawable.ic_person_black_48dp);
-                }
-            });
-        }
-        else
-        {
-            imageView.setImageResource(R.drawable.ic_person_black_48dp);
-        }
-    }*/
-
-
     @Override
-    public void onBindViewHolder(QueueListAdapter.ViewHolder holder, final int position)
+    public void onBindViewHolder(final QueueListAdapter.ViewHolder holder, final int position)
     {
-        holder.mParentView.setOnClickListener(new View.OnClickListener()
+        /*holder.mParentView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                mListener.onClick(mDataset.get(position));
+            }
+        });*/
+
+
+        holder.mTextView.setText(mDataset.get(position).mQName);
+        if(mDataset.get(position).mAddress != null)
+            holder.mAddressView.setText(mDataset.get(position).mAddress);
+
+        holder.mArrow.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                animateSubsView(view, holder);
+            }
+        });
+
+        holder.mSubsButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -131,11 +169,6 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
                 mListener.onClick(mDataset.get(position));
             }
         });
-
-
-        holder.mTextView.setText(mDataset.get(position).mQName);
-        if(mDataset.get(position).mAddress != null)
-            holder.mAddressView.setText(mDataset.get(position).mAddress);
 
         //loadImages(mDataset.get(position).mPhotoURL, holder.mPictureView);
         Utils.setImage(myImageLoader, mDataset.get(position).mPhotoURL, holder.mPictureView, R.drawable.ic_people_black_48dp);
@@ -148,6 +181,73 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
         {
             AnimationUtils.animateSunblind(holder, false);
         }
+    }
+
+
+    void animateSubsView(final View view, final QueueListAdapter.ViewHolder holder)
+    {
+        // If the originalHeight is 0 then find the height of the View being used
+        // This would be the height of the cardview
+        if (holder.mOriginalHeight == 0)
+        {
+            holder.mOriginalHeight = view.getHeight();
+        }
+
+        // Declare a ValueAnimator object
+        ValueAnimator valueAnimator;
+        if (!holder.mIsViewExpanded)
+        {
+
+            valueAnimator = ValueAnimator.ofInt(holder.mOriginalHeight, holder.mOriginalHeight + (int) (holder.mOriginalHeight * 2.0)); // These values in this method can be changed to expand however much you like
+        }
+        else
+        {
+            holder.mIsViewExpanded = false;
+            valueAnimator = ValueAnimator.ofInt(holder.mOriginalHeight + (int) (holder.mOriginalHeight * 2.0), holder.mOriginalHeight);
+
+            Animation a = new AlphaAnimation(1.00f, 0.00f); // Fade out
+
+            a.setDuration(200);
+            // Set a listener to the animation and configure onAnimationEnd
+            a.setAnimationListener(new Animation.AnimationListener()
+            {
+                @Override
+                public void onAnimationStart(Animation animation) { }
+
+                @Override
+                public void onAnimationEnd(Animation animation)
+                {
+                    holder.showSubsPart(false);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) { }
+            });
+
+            // Set the animation on the custom view
+            holder.mSubsPart.startAnimation(a);
+        }
+        valueAnimator.setDuration(200);
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                Integer value = (Integer) animation.getAnimatedValue();
+                view.getLayoutParams().height = value.intValue();
+                view.requestLayout();
+            }
+
+        });
+        valueAnimator.addListener(new AnimatorListenerAdapter()
+        {
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                holder.showSubsPart(true);
+            }
+        });
+        valueAnimator.start();
     }
 
     @Override

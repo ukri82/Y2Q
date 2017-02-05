@@ -15,7 +15,7 @@ import android.widget.EditText;
  */
 public class EnterQueueDetailsFragment extends Fragment
 {
-    QueueDetailsHandler mQHandler;
+    QueueDetailsView mQHandler;
 
     public EnterQueueDetailsFragment()
     {
@@ -27,6 +27,7 @@ public class EnterQueueDetailsFragment extends Fragment
     {
         super.onViewCreated(v, savedInstanceState);
 
+        getView().findViewById(R.id.new_queue_card).setVisibility(View.GONE);
         initializeQueueNumberEdit();
     }
 
@@ -63,11 +64,16 @@ public class EnterQueueDetailsFragment extends Fragment
                 String queueId = s.toString();
                 if(!queueId.isEmpty() )
                 {
+                    getView().findViewById(R.id.new_queue_card).setVisibility(View.VISIBLE);
                     if(mQHandler == null)
                     {
-                        mQHandler = new QueueDetailsHandler(getActivity(), getView().findViewById(R.id.new_queue_card));
+                        mQHandler = new QueueDetailsView(getActivity(), getView().findViewById(R.id.new_queue_card));
                     }
-                    mQHandler.getQueueDetails(queueId);
+                    mQHandler.getQueueDetails(queueId, false);
+                }
+                else
+                {
+                    getView().findViewById(R.id.new_queue_card).setVisibility(View.INVISIBLE);
                 }
             }
         });

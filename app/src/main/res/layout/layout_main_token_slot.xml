@@ -1,52 +1,67 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/card_background"
-              android:orientation="vertical"
-              android:padding="16dp"
-              tools:context="com.y2.y2q.MainTokenFragment">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/card_background"
+             android:padding="16dp"
+             tools:context="com.y2.y2q.MainTokenFragment">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical"
+                  android:id="@+id/main_token_layout">
 
-    >
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
 
-        <TextView android:id="@+id/main_title"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentLeft="true"
-                  android:layout_alignParentTop="true"
-                  android:padding="5dp"
-                  android:text="Queue"
-                  android:textColor="@color/primary_text"
-                  android:textSize="16sp"
-                  android:textStyle="bold"/>
+        >
 
-
-        <ImageView android:id="@+id/main_picture"
-                   android:layout_width="80dp"
-                   android:layout_height="80dp"
-                   android:layout_alignParentRight="true"
-                   android:layout_alignParentTop="true"/>
+            <TextView android:id="@+id/main_title"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_alignParentLeft="true"
+                      android:layout_alignParentTop="true"
+                      android:padding="5dp"
+                      android:text="Queue"
+                      android:textColor="@color/primary_text"
+                      android:textSize="16sp"
+                      android:textStyle="bold"/>
 
 
-    </RelativeLayout>
+            <ImageView android:id="@+id/main_picture"
+                       android:layout_width="80dp"
+                       android:layout_height="80dp"
+                       android:layout_alignParentRight="true"
+                       android:layout_alignParentTop="true"/>
 
 
-    <com.y2.y2q.CircleCountDownView
-        android:id="@+id/circle_count_down_view"
-        android:layout_width="wrap_content"
+        </RelativeLayout>
+
+
+        <com.y2.y2q.CircleCountDownView
+            android:id="@+id/circle_count_down_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"/>
+
+        <ImageButton android:id="@+id/unsubscribe_button"
+                     android:layout_width="48dp"
+                     android:layout_height="48dp"
+                     android:layout_gravity="right"
+                     android:background="?attr/selectableItemBackgroundBorderless"
+                     android:src="@drawable/ic_delete_black_48dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1"/>
+        android:gravity="center"
+        android:text="@string/no_tokens_available"
+        android:textColor="@color/primary_text"
+        android:visibility="visible"/>
 
-    <ImageButton android:id="@+id/unsubscribe_button"
-                 android:layout_width="48dp"
-                 android:layout_height="48dp"
-                 android:layout_gravity="right"
-                 android:background="@drawable/ripple"
-                 android:src="@drawable/ic_delete_black_48dp"/>
-
-</LinearLayout>
+</FrameLayout>

@@ -45,12 +45,6 @@ public class CreateTokenSlotTabsAdapter extends FragmentStatePagerAdapter
         return fragment;
     }
 
-    public void registerEmptyFavListener(FavouriteQueuesFragment.EmptyFavouritesListener listener)
-    {
-        if(mFavouritesFragment != null)
-            mFavouritesFragment.registerEmptyFavListener(listener);
-    }
-
     @Override
     public int getCount()
     {
@@ -62,21 +56,27 @@ public class CreateTokenSlotTabsAdapter extends FragmentStatePagerAdapter
     {
         String title = "Favourites";
         if(position == 1)
-            title = "Scan";
+            title = "QR";
 
         if(position == 2)
-            title = "Enter";
+            title = "Type";
 
         return title;
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
-        mScanQRFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(mScanQRFragment != null)
+        {
+            mScanQRFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     public void onActivityResult(IntentResult result)
     {
-        mScanQRFragment.onActivityResult(result);
+        if(mScanQRFragment != null)
+        {
+            mScanQRFragment.onActivityResult(result);
+        }
     }
 }

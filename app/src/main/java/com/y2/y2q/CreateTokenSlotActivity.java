@@ -49,14 +49,20 @@ public class CreateTokenSlotActivity extends AppCompatActivity
     public void onAttachFragment(Fragment fragment)
     {
         super.onAttachFragment(fragment);
-        mTopLevelTabsAdapter.registerEmptyFavListener(new FavouriteQueuesFragment.EmptyFavouritesListener()
+
+        if(fragment instanceof FavouriteQueuesFragment)
         {
-            @Override
-            public void onEmpty()
+            FavouriteQueuesFragment favFragment = (FavouriteQueuesFragment)fragment;
+            favFragment.registerEmptyFavListener(new FavouriteQueuesFragment.EmptyFavouritesListener()
             {
-                mViewPager.setCurrentItem(1);
-            }
-        });
+                @Override
+                public void onEmpty()
+                {
+                    mViewPager.setCurrentItem(1);
+                }
+            });
+
+        }
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)

@@ -16,6 +16,8 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.y2.utils.PermissionChecker;
 
+import java.util.Locale;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,7 +25,7 @@ import com.y2.utils.PermissionChecker;
 public class ScanQRFragment extends Fragment
 {
 
-    QueueDetailsHandler mQHandler;
+    QueueDetailsView mQHandler;
 
     public ScanQRFragment()
     {
@@ -36,7 +38,7 @@ public class ScanQRFragment extends Fragment
         super.onViewCreated(v, savedInstanceState);
 
         final Activity activity = this.getActivity();
-        activity.findViewById(R.id.scan_qr_code).setOnClickListener(new View.OnClickListener()
+        activity.findViewById(R.id.queue_qr_button).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -63,7 +65,7 @@ public class ScanQRFragment extends Fragment
     {
         IntentIntegrator integrator = new IntentIntegrator(this.getActivity());
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
-        integrator.setPrompt("Scan a barcode");
+        integrator.setPrompt("Scan qr code for queue");
         integrator.setCameraId(0);  // Use a specific camera of the device
         integrator.setBeepEnabled(false);
         integrator.initiateScan();
@@ -99,18 +101,26 @@ public class ScanQRFragment extends Fragment
         else
         {
             Log.d("MainActivity", "Scanned");
-            Toast.makeText(this.getContext(), "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
 
             String scannedCode = result.getContents();
             int index = scannedCode.indexOf("queueid=");
             if(index != -1)
             {
+                scannedCode = scannedCode.toLowerCase(Locale.US);
+
                 scannedCode = scannedCode.substring(index + new String("queueid=").length());
+
+                Toast.makeText(this.getContext(), "Scan successfull. Subscribing to queue " + scannedCode + " .... Please wait", Toast.LENGTH_LONG).show();
+
                 if(mQHandler == null)
                 {
-                    mQHandler = new QueueDetailsHandler(this.getActivity(), getView().findViewById(R.id.new_queue_card));
+                    mQHandler = new QueueDetailsView(this.getActivity(), getView().findViewById(R.id.new_queue_card));
                 }
-                mQHandler.getQueueDetails(scannedCode);
+                mQHandler.getQueueDetails(scannedCode, true);
+            }
+            else
+            {
+                Toast.makeText(this.getContext(), "Scan failed. Maybe wrong QR code. Please try entering the queue details in the other page", Toast.LENGTH_LONG).show();
             }
 
         }

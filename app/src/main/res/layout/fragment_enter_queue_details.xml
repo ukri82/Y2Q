@@ -10,41 +10,34 @@
               android:paddingTop="@dimen/activity_vertical_margin"
               tools:context="com.y2.y2q.EnterQueueDetailsFragment"
 >
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:layout_weight="1"
-                  android:gravity="center"
-                  android:orientation="horizontal">
+        <AutoCompleteTextView
+            android:id="@+id/queue_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/divider"
+            android:hint="@string/prompt_qlyid"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:textColor="@color/primary_text"/>
 
-        <TextView android:id="@+id/queue_number_label"
-                  android:layout_width="wrap_content"
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:layout_weight="1"
-                  android:text="Queue Number"
-                  android:textColor="@color/primary_text"
-                  android:textSize="24sp"/>
-
-        <EditText android:id="@+id/queue_number"
-                  android:layout_width="@dimen/subscribe_button_size"
-                  android:layout_height="wrap_content"
-                  android:background="@drawable/edit_text_background"
-                  android:inputType="number"
-                  android:textColor="@color/primary_text"
-                  android:textSize="48sp"/>
+                  android:id="@+id/new_queue_card"
+                  android:layout_weight="1">
+        <include
+                 layout="@layout/queue_card"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+        />
 
     </LinearLayout>
 
-    <include layout="@layout/new_queue_slot_card"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:layout_weight="1"
-    ></include>
-
-    <FrameLayout android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:id="@+id/dummy"
-                    android:layout_weight="1">
-    </FrameLayout>
 
 </LinearLayout>
